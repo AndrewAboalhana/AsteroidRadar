@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="asteroidItem"
+            type="com.udacity.asteroidradar.database.Asteroid" />
+    </data>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+    <TextView
+        android:id="@+id/code_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_margin="5dp"
+        android:text="@{asteroidItem.codeName}"
+        android:padding="5dp" />
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="#70FFFFFF"
+        android:textSize="15sp"
+        android:text="@{asteroidItem.closeApproachDate}"
+        android:padding="5dp" />
+    </LinearLayout>
+</layout>
