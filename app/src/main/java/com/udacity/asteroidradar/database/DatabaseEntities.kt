@@ -9,15 +9,31 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "ASTEROID_TABLE_NAME")
 @Parcelize
 data class Asteroid(
-    @PrimaryKey
-   val id: Long,
-     val codeName: String,
-     val closeApproachDate: String,
-     val absoluteMagnitude: Double,
-     val estimatedDiameter: Double,
-    val relativeVelocity: Double,
-    val distanceFromEarth: Double,
-    val isPotentiallyHazardous: Boolean) : Parcelable
+ @PrimaryKey
+ @ColumnInfo
+ val id: Long,
+ @ColumnInfo
+
+ val codeName: String,
+ @ColumnInfo
+
+ val closeApproachDate: String,
+ @ColumnInfo
+
+ val absoluteMagnitude: Double,
+ @ColumnInfo
+
+ val estimatedDiameter: Double,
+
+ @ColumnInfo
+ val relativeVelocity: Double,
+
+ @ColumnInfo
+ val distanceFromEarth: Double,
+
+
+ @ColumnInfo
+ val isPotentiallyHazardous: Boolean) : Parcelable
 
 
 

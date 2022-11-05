@@ -1,8 +1,11 @@
 package com.udacity.asteroidradar.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import com.udacity.asteroidradar.database.Asteroid
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,19 +14,23 @@ import org.json.JSONObject
 class AsteroidRepository(private val database: AsteroidDatabase){
     private  val TAG = "AsteroidRepository"
 
+    val property:MutableLiveData<List<Asteroid>> =MutableLiveData<List<Asteroid>>(mutableListOf())
+
 
     suspend fun getData(){
-    withContext(Dispatchers.IO){
-        database.asteroidDao.getAsteroids()
+        withContext(Dispatchers.IO){
+            property.postValue(database.asteroidDao.getAsteroids())
+        }
     }
-}
 
     suspend fun refreshAsteroids(){
         withContext(Dispatchers.IO){
-                  val data = AsteroidApi.asteroidInf.getData("2022-11-4","JT49uKIxInir0VkUo4U4nOHyUFbWnV3CKZ7OL5UV")
-                  val jsonobj = JSONObject(data)
-                   val finalData = parseAsteroidsJsonResult(jsonobj)
-            database.asteroidDao.insertAll(finalData)
+            val data = AsteroidApi.asteroidInf.getData("2022-11-4",
+                "JT49uKIxInir0VkUo4U4nOHyUFbWnV3CKZ7OL5UV")
+            Log.d("data",data.toString())
+            val jsonobj = JSONObject(data)
+            val finalData = parseAsteroidsJsonResult(jsonobj)
+            database.asteroidDao.insertAll(*finalData.toTypedArray())
             Log.d(TAG, "refreshAsteroids: " + database )
 
         }

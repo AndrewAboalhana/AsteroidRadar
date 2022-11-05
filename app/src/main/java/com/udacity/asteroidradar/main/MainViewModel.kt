@@ -26,24 +26,30 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _status = MutableLiveData<String>()
     val status:LiveData<String>
-      get() = _status
+        get() = _status
 
-    private val _property = MutableLiveData<ArrayList<Asteroid>>()
-    val property:LiveData<ArrayList<Asteroid>>
-      get() = _property
+    private val _navigateToDetailData = MutableLiveData<Asteroid?>()
+      val navigateToDetailData: LiveData<Asteroid?>
+       get() = _navigateToDetailData
+
+
+    private val _property = repository.property
+
+    val property:LiveData<List<Asteroid>>
+        get() = _property
 
 
 
     private val _imageUrl = MutableLiveData<PictureOfDay>()
-       val imageUrl:LiveData<PictureOfDay>
-          get() =_imageUrl
- init {
-     viewModelScope.launch {
-       repository.refreshAsteroids()
-       repository.getData()
-     }
-     getImageOfDay()
- }
+    val imageUrl:LiveData<PictureOfDay>
+        get() =_imageUrl
+    init {
+        viewModelScope.launch {
+            repository.refreshAsteroids()
+            repository.getData()
+        }
+        getImageOfDay()
+    }
 
 
 //private fun getAsteroidData(){
@@ -73,7 +79,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 if(result.mediaType == "image")
 
                     _imageUrl.value = result
-                    Log.i(TAG, "getImageOfDay: " + _imageUrl)
+                Log.i(TAG, "getImageOfDay: " + _imageUrl)
             }catch (e:Exception){
                 _status.value ="Failure: ${e.message}"
                 Log.e(TAG, "getImageOfDay: " + e.message)
@@ -82,10 +88,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+  fun displayPropertyDetails(asteroid: Asteroid){
+    _navigateToDetailData.value = asteroid
+  }
+  fun displayPropertyDetailsCompleted(){
+      _navigateToDetailData.value = null
+  }
+
+
 
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
-           override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
                 return MainViewModel(app) as T

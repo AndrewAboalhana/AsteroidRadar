@@ -10,10 +10,10 @@ import com.udacity.asteroidradar.OldData
 interface AsteroidDao{
 
     @Query(" SELECT * FROM ASTEROID_TABLE_NAME")
-        fun getAsteroids():LiveData<ArrayList<Asteroid>>
+    fun getAsteroids():List<Asteroid>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg oldData: ArrayList<Asteroid>)
+    fun insertAll(vararg oldData: Asteroid)
 }
 
 
@@ -21,7 +21,7 @@ interface AsteroidDao{
 
 @Database(entities = [Asteroid::class], version = 1)
 abstract class AsteroidDatabase:RoomDatabase(){
-  abstract val asteroidDao : AsteroidDao
+    abstract val asteroidDao : AsteroidDao
 }
 
 private lateinit var INSTANCE:AsteroidDatabase

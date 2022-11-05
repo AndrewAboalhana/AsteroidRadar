@@ -6,12 +6,15 @@
         <variable
             name="asteroidItem"
             type="com.udacity.asteroidradar.database.Asteroid" />
+        <variable
+            name="clickListener"
+            type="com.udacity.asteroidradar.main.MainAdapter.OnClickListener" />
     </data>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:onClick="@{() -> clickListener.onClick(asteroidItem)}">
 
     <TextView
         android:id="@+id/code_name"
@@ -19,17 +22,13 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:layout_margin="5dp"
-        android:text="@{asteroidItem.codeName}"
-        android:padding="5dp" />
+        android:text="@{asteroidItem.codeName}" />
     <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:textColor="#70FFFFFF"
         android:textSize="15sp"
-        android:text="@{asteroidItem.closeApproachDate}"
-        android:padding="5dp" />
+        android:text="@{asteroidItem.closeApproachDate}" />
     </LinearLayout>
 </layout>
