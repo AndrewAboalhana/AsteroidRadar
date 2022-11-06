@@ -102,14 +102,43 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
       _navigateToDetailData.value = null
   }
 
+    fun displayTodayAsteroid(){
+        viewModelScope.launch (Dispatchers.IO){
+            try {
+                _property.postValue(database.asteroidDao.getAsteroidsByDurationDates(
+                    getNextSevenDaysFormattedDates().first(), getNextSevenDaysFormattedDates().first()))
+            }catch (e:Exception){
+
+            }
+
+        }
+
+    }
   fun displayWeekAsteroid(){
+      viewModelScope.launch (Dispatchers.IO) {
+          try {
+              _property.postValue( database.asteroidDao.getAsteroidsByDurationDates(
+                  getNextSevenDaysFormattedDates().first(), getNextSevenDaysFormattedDates().last()))
+          }catch (e:Exception){
+              Log.e(TAG, "displayWeekAsteroid: "+ e.message )
+          }
 
-  }
-//  fun displayTodayAsteroid(){
-//     _property.value = database.asteroidDao.getAsteroidsByDurationDates(
-//         getNextSevenDaysFormattedDates("1"), getNextSevenDaysFormattedDates("1"))
-//    }
+      }
 
+    }
+
+    fun displaySavedAsteroid(){
+
+        viewModelScope.launch (Dispatchers.IO) {
+            try {
+                _property.postValue(database.asteroidDao.getAsteroids())
+            }catch (e:Exception){
+
+            }
+
+        }
+
+    }
 
 
 
