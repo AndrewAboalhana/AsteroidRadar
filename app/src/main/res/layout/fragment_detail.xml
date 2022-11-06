@@ -94,6 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="16dp"
+                        android:contentDescription="This is help dialog Button"
                         app:srcCompat="@drawable/ic_help_circle" />
 
                 </LinearLayout>
@@ -103,6 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/estimated_diameter_title"
+                    android:contentDescription="@string/estimated_diameter_title"
                     android:textColor="@color/default_text_color" />
 
                 <TextView

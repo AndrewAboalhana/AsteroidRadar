@@ -14,8 +14,10 @@ import com.udacity.asteroidradar.main.MainAdapter
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
+        imageView.contentDescription = "this is Hazardous "
     } else {
         imageView.setImageResource(R.drawable.ic_status_normal)
+        imageView.contentDescription="this isn't Hazardous"
     }
 }
 
@@ -23,8 +25,10 @@ fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
 fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.asteroid_hazardous)
+        imageView.contentDescription="this is Hazardous image"
     } else {
         imageView.setImageResource(R.drawable.asteroid_safe)
+        imageView.contentDescription="this isn't Hazardous image"
     }
 }
 
@@ -52,6 +56,7 @@ fun binImage(imageView: ImageView,imgUrl:String?){
         val imgUri = it.toUri().buildUpon().scheme("https").build()
            Picasso.with(imageView.context)
                .load(imgUri)
+               .error(R.drawable.ic_launcher_foreground)
                .into(imageView)
         println(imgUri)
     }
