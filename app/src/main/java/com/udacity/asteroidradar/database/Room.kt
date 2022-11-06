@@ -8,6 +8,8 @@ import com.udacity.asteroidradar.OldData
 
 @Dao
 interface AsteroidDao{
+    @Query("SELECT * FROM ASTEROID_TABLE_NAME  WHERE  closeApproachDate >= :startDate AND  closeApproachDate <= :endDate ORDER BY  closeApproachDate ASC")
+    fun getAsteroidsByDurationDates(startDate: String, endDate: String): List<Asteroid>
 
     @Query(" SELECT * FROM ASTEROID_TABLE_NAME")
     fun getAsteroids():List<Asteroid>

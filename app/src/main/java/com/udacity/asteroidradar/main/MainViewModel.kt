@@ -7,10 +7,12 @@ import com.udacity.asteroidradar.OldData
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.AsteroidApi
 import com.udacity.asteroidradar.api.ImageApi
+import com.udacity.asteroidradar.api.getNextSevenDaysFormattedDates
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.Asteroid
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -33,7 +35,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
        get() = _navigateToDetailData
 
 
-    private val _property = repository.property
+    private val _property =MutableLiveData<List<Asteroid>>(mutableListOf())
+
 
     val property:LiveData<List<Asteroid>>
         get() = _property
@@ -43,10 +46,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _imageUrl = MutableLiveData<PictureOfDay>()
     val imageUrl:LiveData<PictureOfDay>
         get() =_imageUrl
+
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.refreshAsteroids()
-            repository.getData()
+            val asteroidData = repository.getData()
+            _property.postValue(asteroidData)
         }
         getImageOfDay()
     }
@@ -73,15 +78,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 // }
 
     private fun getImageOfDay(){
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             try{
                 val result = ImageApi.imageData.getImage("JT49uKIxInir0VkUo4U4nOHyUFbWnV3CKZ7OL5UV")
                 if(result.mediaType == "image")
 
-                    _imageUrl.value = result
+                    _imageUrl.postValue(result)
                 Log.i(TAG, "getImageOfDay: " + _imageUrl)
+            }catch (ce: CancellationException) {
+
             }catch (e:Exception){
-                _status.value ="Failure: ${e.message}"
+                _status.postValue("Failure: ${e.message}")
                 Log.e(TAG, "getImageOfDay: " + e.message)
             }
         }
@@ -94,6 +101,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
   fun displayPropertyDetailsCompleted(){
       _navigateToDetailData.value = null
   }
+
+  fun displayWeekAsteroid(){
+
+  }
+//  fun displayTodayAsteroid(){
+//     _property.value = database.asteroidDao.getAsteroidsByDurationDates(
+//         getNextSevenDaysFormattedDates("1"), getNextSevenDaysFormattedDates("1"))
+//    }
+
 
 
 

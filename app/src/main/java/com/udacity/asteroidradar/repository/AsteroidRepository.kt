@@ -1,39 +1,52 @@
 package com.udacity.asteroidradar.repository
 
+
+import android.content.Context
+import android.net.ConnectivityManager
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.core.content.ContextCompat.getSystemService
 import com.udacity.asteroidradar.api.AsteroidApi
+import com.udacity.asteroidradar.api.getNextSevenDaysFormattedDates
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.Asteroid
 import com.udacity.asteroidradar.database.AsteroidDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.util.concurrent.CancellationException
 
 class AsteroidRepository(private val database: AsteroidDatabase){
     private  val TAG = "AsteroidRepository"
 
-    val property:MutableLiveData<List<Asteroid>> =MutableLiveData<List<Asteroid>>(mutableListOf())
 
 
-    suspend fun getData(){
-        withContext(Dispatchers.IO){
-            property.postValue(database.asteroidDao.getAsteroids())
-        }
-    }
+
+       suspend fun getData():List<Asteroid>{
+
+           return database.asteroidDao.getAsteroids()
+       }
+
 
     suspend fun refreshAsteroids(){
-        withContext(Dispatchers.IO){
-            val data = AsteroidApi.asteroidInf.getData("2022-11-4",
-                "JT49uKIxInir0VkUo4U4nOHyUFbWnV3CKZ7OL5UV")
-            Log.d("data",data.toString())
-            val jsonobj = JSONObject(data)
-            val finalData = parseAsteroidsJsonResult(jsonobj)
-            database.asteroidDao.insertAll(*finalData.toTypedArray())
-            Log.d(TAG, "refreshAsteroids: " + database )
+         try {
+             val data = AsteroidApi.asteroidInf.getData(
+                 getNextSevenDaysFormattedDates().first()
+                 , getNextSevenDaysFormattedDates().last(),
+                 "JT49uKIxInir0VkUo4U4nOHyUFbWnV3CKZ7OL5UV")
+             Log.d("data",data.toString())
+             val jsonobj = JSONObject(data)
+             val finalData = parseAsteroidsJsonResult(jsonobj)
+             database.asteroidDao.insertAll(*finalData.toTypedArray())
+             Log.d(TAG, "refreshAsteroids: " + database )
+         }catch (ce: CancellationException) {
 
-        }
+
+         } catch (e: Exception) {
+             // display error
+
+
+         }
+
+
+
     }
 
 
